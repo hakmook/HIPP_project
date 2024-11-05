@@ -14,6 +14,7 @@
 	|- Codes/          # any programmatic code
 	|
 	|- Results        # all output from workflows and analyses
-	| |- tables/      # text version of tables to be rendered with kable in R
+	| |- reports/     # html/word/pdf version of analyses to be rendered with kable in R
+	| |- tables/      # text version of tables
 	| |- figures/     # graphs, likely designated for manuscript figures
 	| +- pictures/    # diagrams, images, and other non-graph graphics
