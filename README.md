@@ -1,8 +1,8 @@
 ## Data Analysis for Human Islet Phenotyping Program
 
-### Overview
+### Overview: This guide provides an overview of the structure and contents of the project repository.
 
-	Project Structure: This guide provides an overview of the structure and contents of the project repository.
+	Project Structure
 	|- README         # Overview of the project contents and setup (this document)
 	|- CONTRIBUTING   # Guidelines for contributing to the project
 	|
