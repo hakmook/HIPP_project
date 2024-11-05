@@ -2,19 +2,21 @@
 
 ### Overview
 
-	project
-	|- README          # the top level description of content (this doc)
-	|- CONTRIBUTING    # instructions for how to contribute to your project
+	Project Structure: This guide provides an overview of the structure and contents of the project repository.
+	|- README         # Overview of the project contents and setup (this document)
+	|- CONTRIBUTING   # Guidelines for contributing to the project
 	|
-	|- Data           # raw and primary data, are not changed once created
-	| |- references/  # reference files to be used in analysis
-	| |- raw/         # raw data, will not be altered
-	| +- process/     # cleaned data, will not be altered once created;
+	|- Data           # Contains all raw and primary data, unaltered once created
+	| |- references/  # Reference files for use in analysis
+	| |- raw/         # Raw data, preserved in original format
+	| +- process/     # Cleaned data, fixed after initial processing
  	|
-	|- Codes/          # any programmatic code
+	|- Codes/         # Programmatic scripts and code for data processing and analysis
 	|
-	|- Results        # all output from workflows and analyses
-	| |- reports/     # html/word/pdf version of analyses to be rendered with kable in R
-	| |- tables/      # text version of tables
-	| |- figures/     # graphs, likely designated for manuscript figures
-	| +- pictures/    # diagrams, images, and other non-graph graphics
+	|- Results        # Outputs from workflows and analyses
+	| |- reports/     # Analysis reports in formats like HTML, Word, or PDF (rendered with kable in R)
+	| |- tables/      # Text-formatted tables for easy referencing
+	| |- figures/     # Graphs intended for manuscript use
+	| +- pictures/    # Diagrams, images, and other graphics
+	|
+	|- Manuscripts    # Manuscripts and drafts ready for submission
