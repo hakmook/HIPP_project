@@ -1,0 +1,986 @@
+---
+title: "Correlation between islet morphological variables and insulin & glucagon traits (scaled)"
+author: "Hakmook Kang and Ke Xu <br><small>Department of Biostatistics<br>Vanderbilt University School of Medicine</small>"
+date: "<small>`r Sys.Date()`</small>"
+knit: (function(inputFile, encoding) { 
+      out_dir <- '/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/REPORTS';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(out_dir, paste0('/Reports-Models-',Sys.Date(),'.html'))) })
+output: 
+  html_document:
+    code_folding: hide
+    theme: paper
+    toc: yes
+    toc_depth: 5
+    toc_float: true
+    number_sections: true
+    df_print: paged
+editor_options: 
+  chunk_output_type: inline
+description: "for Marcela"
+---
+
+<style type="text/css">
+#TOC{
+position:fixed;
+top:0;
+right:0;
+margin: 40px 40px 40px 40px;
+background-color: #F0F0F0;
+border-color: Black;
+z-index: 9;
+}
+#toc-toggle{
+position:fixed;
+top:0;
+right:0;
+margin: 5px 20px 5px 20px;
+}
+.col-md-3 {
+  width: 3%;
+}
+div.container-fluid.main-container{
+  max-width: none;
+  margin-left: none;
+  margin-right: none;
+}
+p img{
+  max-width:none;
+}
+.title{
+  max-width:100ex;
+}
+h1.title {
+  font-size: 22px;
+  color: Black;
+}
+h1 { /* Header 1 */
+  font-size: 18px;
+  color: Black;
+}
+h2 { /* Header 2 */
+  font-size: 18px;
+  color: Black;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  color: Black;
+}
+h4 { /* Header 4 */
+   font-size: 16px;
+  color: Black;
+}
+h5 { /* Header 5 */
+   font-size: 16px;
+  color: Black;
+}
+hr {
+  border-color: Black;
+  width:100%;
+  border-width:2px;
+}
+</style>
+
+<button id="toc-toggle" type="button" class="btn btn-default btn-xs code-folding-btn pull-right collapsed" 
+onclick="toggletoc()"><span>Table of Contents</span></button>
+
+<script>
+function toggletoc(){
+$("#TOC").toggle();
+}
+</script>
+
+<hr>
+
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+```
+
+```{r, packages, message=FALSE, echo=FALSE, warning=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(Hmisc)
+library(rms)
+library(kableExtra)
+library(knitr)
+library(dplyr)
+#library(xlsx)
+library(VGAM)
+library(sjPlot)
+library(readxl)
+options(digits = 4)
+```
+
+
+# Overview
+
+<!-- -->
+## Methods
+
+Assessing correlation between morphological variables and insulin \& glucagon secretion traits.
+
+For each morphology variable, we fit 20 regression models, i.e., 20 insulin (N=11) and glucagon (N=9) secretion trait variables. The sample size will be much smaller than n=299 due to lots of missing information in morphological variables.We controlled 8 covariates. 
+
+A list of morphological variable:
+
+- islet diameter preperi
+- islet area preperi
+- islet perimeter preperi
+- islet diameter postperi
+- islet area postperi
+- islet perimeter postperi
+- islet diameter 
+- islet area 
+- islet perimeter 
+
+A list of insulin traits variable:
+
+- Quantitative (ng/IEQ):
+
+  - INS_basal_ng_IEQ
+  - INS_1st_AUC_ng_IEQ
+  - INS_2nd_AUC_ng_IEQ
+  - INS_G_16_7_AUC_ng_IEQ
+  - INS_G_16_7_SI
+  - INS_G_16_7_IBMX_100_AUC_ng_IEQ
+  - INS_G_16_7_IBMX_100_SI
+  - INS_G_1_7_Epi_1_AUC_ng_IEQ
+  - INS_G_1_7_Epi_1_II_updated
+  - INS_KCl_20_AUC_ng_IEQ
+  - INS_KCl_20_SI 
+
+A list of glucagon traits variable:
+
+- Quantitative (pg/IEQ):
+  
+  - GCG_basal_pg_IEQ
+  - GCG_G_16_7_AUC_pg_IEQ
+  - GCG_G_16_7_II
+  - GCG_G_16_7_IBMX_100_AUC_pg_IEQ
+  - GCG_G_16_7_IBMX_100_SI
+  - GCG_G_1_7_Epi_1_AUC_pg_IEQ
+  - GCG_G_1_7_Epi_1_SI
+  - GCG_KCl_20_AUC_pg_IEQ
+  - GCG_KCl_20_SI 
+  
+**Models(scaled)**
+
+outcome ~ insulin & glucagon traits + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + PreShipmentCultureTime + IsletTransitTime
+
+**Results**
+
+The adjusted p-values were computed using the false discovery rate (FDR) method to correct for multiple comparisons.
+               
+***
+```{r}
+# Define the function for formatting tables
+format_summary_table <- function(data) {
+  
+  # Convert P_Value and Adjust_P_Value columns to numeric
+  data <- data %>%
+    mutate(
+      P_Value = as.numeric(P_Value),
+      Adjust_P_Value = as.numeric(Adjust_P_Value)
+    )
+  
+  # Format p-values and adjusted p-values as scientific notation
+  data$pvalueCharacter <- as.character(formatC(data$P_Value, digits = 3, format = 'e'))
+  data$adjpvalueCharacter <- as.character(formatC(data$Adjust_P_Value, digits = 3, format = 'e'))
+  
+  # Apply bold formatting for p-values less than 0.05
+  data[data$P_Value < 0.05, 'pvalueCharacter'] <- cell_spec(data[data$P_Value < 0.05, 'pvalueCharacter'], "html", bold = TRUE)
+  data[data$Adjust_P_Value < 0.05, 'adjpvalueCharacter'] <- cell_spec(data[data$Adjust_P_Value < 0.05, 'adjpvalueCharacter'], "html", bold = TRUE)
+  
+  # Drop the original P_Value and Adjust_P_Value columns
+  data <- data[, -c(2, 3)]
+  
+  # Rename the columns
+  colnames(data) <- c("Coeff", "P-val", "Adj P-val")
+  
+  # Return the styled table
+  kbl(data, escape = FALSE, digits = 4) %>%
+    kable_styling()
+}
+```
+
+
+```{r, results= "hide", warning=FALSE}
+hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")
+
+# Replace spaces, parentheses, dashes, and other special characters with underscores
+colnames(hipp) <- gsub("[^[:alnum:]]+", "_", colnames(hipp))
+colnames(hipp) <- gsub("_+", "_", colnames(hipp))
+colnames(hipp) <- gsub("^_|_$", "", colnames(hipp))
+colnames(hipp) <- gsub("content", "percent", colnames(hipp))
+
+
+hipp = hipp[which(hipp$n299cohort == "Y"),]
+
+# define non-diabetes and pre-diabetes
+hipp$group<-NA
+hipp$group[hipp$Donor_HbA1c<5.7]<-1
+hipp$group[hipp$Donor_HbA1c>=5.7]<-2
+hipp$group<-factor(hipp$group, levels = 1:2, labels = c("Normal","Pre-diabetes"))
+
+#redefine race to combine American Indian with Native Hawaiian/Pacific Islander
+hipp$race2<-NA
+hipp$race2[hipp$Race=="White"]<-1
+hipp$race2[hipp$Race=="Black or African American"]<-2
+hipp$race2[hipp$Race=="Hispanic/Latino"]<-3
+hipp$race2[hipp$Race=="Asian"]<-4
+hipp$race2<-factor(hipp$race2, levels = 1:4, 
+                   labels = c("White","Black","Hispanic","Asian"))
+label(hipp$race2) = "Race"
+
+hipp<-subset(hipp, subset = !is.na(race2))  # dim(hipp)[1]  321
+
+hipp$Race<-factor(hipp$Race)
+```
+
+
+```{r}
+INS_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
+  "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
+  "INS_G_16_7_IBMX_100_SI", "INS_G_1_7_Epi_1_AUC_ng_IEQ", "INS_G_1_7_Epi_1_II_updated", 
+  "INS_KCl_20_AUC_ng_IEQ", "INS_KCl_20_SI")
+
+GCG_vars <- c("GCG_basal_pg_IEQ", "GCG_G_16_7_AUC_pg_IEQ", "GCG_G_16_7_II", 
+  "GCG_G_16_7_IBMX_100_AUC_pg_IEQ", "GCG_G_16_7_IBMX_100_SI", 
+  "GCG_G_1_7_Epi_1_AUC_pg_IEQ", "GCG_G_1_7_Epi_1_SI", "GCG_KCl_20_AUC_pg_IEQ", 
+  "GCG_KCl_20_SI")
+
+
+# Scale INS variables
+hipp[INS_vars] <- lapply(hipp[INS_vars], function(x) scale(as.numeric(x)))
+
+# Scale GCG variables
+hipp[GCG_vars] <- lapply(hipp[GCG_vars], function(x) scale(as.numeric(x)))
+
+
+# morphological variables: need to convert them to numeric
+morpho_vars <- c("Islet_diameter_preperi", "Islet_area_preperi", "Islet_perimeter_preperi",
+                 "Islet_diameter_postperi", "Islet_area_postperi", "Islet_perimeter_postperi",
+                 "Islet_diameter", "Islet_area", "Islet_perimeter")
+
+hipp[morpho_vars] <- lapply(hipp[morpho_vars], function(x) scale(as.numeric(x)))
+
+
+# Scale covariates
+hipp$PreShipmentCultureTime<-scale(hipp$Pre_shipment_Culture_Time_hours)
+hipp$IsletTransitTime<-scale(hipp$Islet_Transit_Time_hours)
+hipp$Age_years = scale(hipp$Age_years)
+hipp$BMI = scale(hipp$BMI)
+hipp$Donor_HbA1c = scale(hipp$Donor_HbA1c)
+
+hipp$center<-NA
+hipp$center[hipp$Center=="Scharp-Lacy"]<-1
+hipp$center[hipp$Center=="SC-ICRC"]<-2
+hipp$center[hipp$Center=="Miami"]<-3
+hipp$center[hipp$Center=="Wisconsin"]<-4
+hipp$center[hipp$Center=="Pennsylvania"]<-5
+hipp$center<-factor(hipp$center, levels = 1:5, labels = c("Scharp-Lacy","SC-ICRC","Miami","Wisconsin","Pennsylvania"))
+```
+
+```{r, results= "hide", warning=FALSE}
+###################################################################
+###################################################################
+###################################################################
+vars_int = morpho_vars
+outcome_int_ins = INS_vars
+outcome_int_glu = GCG_vars
+
+Summary_Table = vector(mode='list', length=length(vars_int))
+model_out = vector(mode='list', length=length(vars_int))
+names(model_out) = vars_int
+for (m in 1:length(vars_int)){
+  temp_summary = NULL
+  for (k in 1:length(outcome_int_ins)){
+    model = as.formula(paste0(outcome_int_ins[k], "~", vars_int[m], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+    fit = lm(model, data = hipp)
+    temp = summary(fit)
+    temp1 = temp$coefficients[2,]
+    temp1[2:3] = round(temp1[2:3], 4)
+    temp1[c(1,4)] = formatC(temp1[c(1,4)], format = "e", digits = 3)
+    temp_summary = rbind(temp_summary, temp1) 
+    
+    model_out[[m]][[k]] = summary(fit)
+  }
+  names(model_out[[m]]) = vars_int
+  
+  temp_summary = as.data.frame(temp_summary)
+  temp_summary$adj_pvalue = formatC(p.adjust(temp_summary[,4], method='fdr'),
+  format = "e", digits = 3)
+  Summary_Table[[vars_int[m]]] = temp_summary
+}
+
+############################################
+### Glucagon Secretion
+########################################
+
+Summary_Table_g = vector(mode='list', length=length(vars_int))
+model_out_g = vector(mode='list', length=length(vars_int))
+names(model_out_g) = vars_int
+for (m in 1:length(vars_int)){
+  temp_summary = NULL
+  for (k in 1:length(outcome_int_glu)){
+    model = as.formula(paste0(outcome_int_glu[k], "~", vars_int[m], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+    fit = lm(model, data = hipp)
+    temp = summary(fit)
+    temp1 = temp$coefficients[2,]
+    temp1[2:3] = round(temp1[2:3], 4)
+    temp1[c(1,4)] = formatC(temp1[c(1,4)], format = "e", digits = 3)
+    temp_summary = rbind(temp_summary, temp1) 
+    
+    model_out_g[[m]][[k]] = summary(fit)
+  }
+  names(model_out_g[[m]]) = vars_int
+  
+  temp_summary = as.data.frame(temp_summary)
+  temp_summary$adj_pvalue = formatC(p.adjust(temp_summary[,4], method='fdr'),
+  format = "e", digits = 3)
+  Summary_Table_g[[vars_int[m]]] = temp_summary
+}
+
+```
+
+
+# Results
+
+## Islet Diameter Preperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_diameter_preperi")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+
+## Islet Area Preperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_area_preperi")
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+## Islet Perimeter Preperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_perimeter_preperi")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+
+## Islet Diameter Postperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_diameter_postperi")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+
+## Islet Area Postperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_area_postperi")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+## Islet Perimeter Postperi
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_perimeter_postperi")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+## Islet Diameter
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_diameter")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+## Islet Area
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_area")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+## Islet Perimeter
+
+### Insuline secretion
+
+```{r warning=FALSE, message=FALSE}
+vars_int_index <- which(vars_int == "Islet_perimeter")
+
+modlist <- lapply(1:length(outcome_int_ins),function(i){
+  model = as.formula(paste0(outcome_int_ins[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_ins
+```
+
+```{r results="asis"}
+for (x in outcome_int_ins){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+### Glucagon secretion
+
+```{r warning=FALSE, message=FALSE}
+
+modlist <- lapply(1:length(outcome_int_glu),function(i){
+  model = as.formula(paste0(outcome_int_glu[i], "~", vars_int[vars_int_index], " + Donor_HbA1c + Gender + race2 + Age_years + center + BMI + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  mod = lm(model, data = hipp)
+  return(mod)
+})
+
+names(modlist) = outcome_int_glu
+```
+
+```{r results="asis"}
+for (x in outcome_int_glu){
+  cat(tab_model(modlist[[x]], digits = 4)$knitr,"\n\n--------\n\n")
+}
+```
+
+
+
+# Summary Table
+
+## Islet Diameter Preperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- 'Islet_diameter_preperi'
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_preperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- 'Islet_diameter_preperi'
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_preperi_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Area Preperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_area_preperi"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_preperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_area_preperi"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_preperi_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Perimeter Preperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter_preperi"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_preperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter_preperi"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_preperi_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Diameter Postperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_diameter_postperi"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_postperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_diameter_postperi"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_postperi_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Area Postperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_area_postperi"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_postperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_area_postperi"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_postperi_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Perimeter Postperi
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter_postperi"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_postperi_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter_postperi"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_postperi_glucagon_traits_scale.csv') # SAVE THE FILES AND SHARE THEM WITH THE TEAM
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+## Islet Diameter
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_diameter"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_diameter"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Diameter_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Area
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_area"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_area"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Area_glucagon_traits_scale.csv')
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+
+## Islet Perimeter
+
+### Insulin secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter"
+rownames(Summary_Table[[outcome_var]]) = outcome_int_ins
+write.csv(Summary_Table[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_ins_traits_scale.csv')
+Summary_Tab = Summary_Table[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_ins
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```
+
+### Glucagon secretion
+
+``` {r}
+outcome_var <- "Islet_perimeter"
+rownames(Summary_Table_g[[outcome_var]]) = outcome_int_glu
+write.csv(Summary_Table_g[[outcome_var]], file='/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/csv_files_scale/Perimeter_glucagon_traits_scale.csv') # SAVE THE FILES AND SHARE THEM WITH THE TEAM
+Summary_Tab = Summary_Table_g[[outcome_var]][,-c(2,3)]
+colnames(Summary_Tab) = c("Coeff", "P_Value", "Adjust_P_Value")
+rownames(Summary_Tab) = outcome_int_glu
+formatted_table <- format_summary_table(Summary_Tab);formatted_table
+```

@@ -1,0 +1,256 @@
+---
+title: "INS_basal_ng_IEQ vs. Race, Pairwise comparisons"
+author: "Hakmook Kang and Ke Xu <br><small>Department of Biostatistics<br>Vanderbilt University School of Medicine</small>"
+date: "<small>`r Sys.Date()`</small>"
+knit: (function(inputFile, encoding) { 
+      out_dir <- '/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/REPORTS';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(out_dir, paste0('/Reports-Multiple-PairwiseComparisons-AncestryGroups-',Sys.Date(),'.html'))) })
+output: 
+  html_document:
+    theme: paper
+    toc: yes
+    toc_depth: 5
+    toc_float: 
+      collapsed: yes
+    number_sections: true
+---
+
+<style type="text/css">
+#TOC{
+position:fixed;
+top:0;
+right:0;
+margin: 40px 40px 40px 40px;
+background-color: #F0F0F0;
+border-color: Black;
+z-index: 9;
+}
+#toc-toggle{
+position:fixed;
+top:0;
+right:0;
+margin: 5px 20px 5px 20px;
+}
+.col-md-3 {
+  width: 3%;
+}
+div.container-fluid.main-container{
+  max-width: none;
+  margin-left: none;
+  margin-right: none;
+}
+p img{
+  max-width:none;
+}
+.title{
+  max-width:100ex;
+}
+h1.title {
+  font-size: 22px;
+  color: Black;
+}
+h1 { /* Header 1 */
+  font-size: 18px;
+  color: Black;
+}
+h2 { /* Header 2 */
+  font-size: 18px;
+  color: Black;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  color: Black;
+}
+h4 { /* Header 4 */
+   font-size: 16px;
+  color: Black;
+}
+h5 { /* Header 5 */
+   font-size: 16px;
+  color: Black;
+}
+hr {
+  border-color: Black;
+  width:100%;
+  border-width:2px;
+}
+</style>
+
+<button id="toc-toggle" type="button" class="btn btn-default btn-xs code-folding-btn pull-right collapsed" 
+onclick="toggletoc()"><span>Table of Contents</span></button>
+
+<script>
+function toggletoc(){
+$("#TOC").toggle();
+}
+</script>
+
+<hr>
+
+# Overview
+
+<!-- -->
+## Methods
+
+We conducted multiple pairwise comparisons of basal insulin (INS.basal..ng.IEQ.) levels across four ancestry groups.
+
+- SuperPopulationClass (N=268):
+  
+  - AFR (N=21)
+  - AMR (N=86)
+  - EAS (N=11)
+  - EUR (N=150)
+
+
+To evaluate differences in basal insulin across ancestry groups, we applied the Wilcoxon rank-sum test for pairwise comparisons. The false discovery rate (FDR) adjustment was used to control for multiple comparisons.
+
+**Results**
+
+P-values < 0.05 were bolded in the results table for emphasis.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+```
+
+```{r, packages, message=FALSE, echo=FALSE, warning=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(Hmisc)
+library(rms)
+library(kableExtra)
+library(knitr)
+library(dplyr)
+library(readxl)
+library(VGAM)
+library(sjPlot)
+options(digits = 4)
+options(scipen = -3)
+```
+
+```{r}
+# Define the function for p-values calculations
+comput = function(race1, race2, dat1){
+  temp1 = dat1$INS_basal_ng_IEQ[dat1[[race1]] == 1]
+  temp2 = dat1$INS_basal_ng_IEQ[dat1[[race2]] == 1]
+    
+  test1 = wilcox.test(temp1, temp2)
+ 
+  pval = c(race1, race2, round(test1$p.value, 4))
+  return(pval)
+}
+```
+
+```{r, results= "hide", warning=FALSE, message=FALSE}
+# Data cleaning
+hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")
+
+# Replace spaces, parentheses, dashes, and other special characters with underscores
+colnames(hipp) <- gsub("[^[:alnum:]]+", "_", colnames(hipp))
+colnames(hipp) <- gsub("_+", "_", colnames(hipp))
+colnames(hipp) <- gsub("^_|_$", "", colnames(hipp))
+colnames(hipp) <- gsub("content", "percent", colnames(hipp))
+
+
+hipp = hipp[which(hipp$n299cohort == "Y"),]
+
+# define non-diabetes and pre-diabetes
+
+hipp$group<-NA
+hipp$group[hipp$Donor_HbA1c<5.7]<-1
+hipp$group[hipp$Donor_HbA1c>=5.7]<-2
+hipp$group<-factor(hipp$group, levels = 1:2, labels = c("Normal","Pre-diabetes"))
+
+#redefine race to combine American Indian with Native Hawaiian/Pacific Islander
+hipp$race2<-NA
+hipp$race2[hipp$Race=="White"]<-1
+hipp$race2[hipp$Race=="Black or African American"]<-2
+hipp$race2[hipp$Race=="Hispanic/Latino"]<-3
+hipp$race2[hipp$Race=="Asian"]<-4
+# hipp$race2[hipp$Race=="American Indian or Alaska Native" | 
+#              hipp$Race=="Native Hawaiian or Other Pacific Islander"]<-5
+# hipp$race2[hipp$Race=="Not Available"]<-6
+hipp$race2<-factor(hipp$race2, levels = 1:4, 
+                   labels = c("White","Black","Hispanic","Asian"))
+label(hipp$race2) = "Race"
+
+hipp<-subset(hipp, subset = !is.na(race2))
+
+hipp$center<-NA
+hipp$center[hipp$Center=="Scharp-Lacy"]<-1
+hipp$center[hipp$Center=="SC-ICRC"]<-2
+hipp$center[hipp$Center=="Miami"]<-3
+hipp$center[hipp$Center=="Wisconsin"]<-4
+hipp$center[hipp$Center=="Pennsylvania"]<-5
+hipp$center<-factor(hipp$center, levels = 1:5, labels = c("Scharp-Lacy","SC-ICRC","Miami","Wisconsin","Pennsylvania"))
+
+hipp$Center<-factor(hipp$Center)
+hipp$Race<-factor(hipp$Race)
+hipp$White = factor(ifelse(hipp$race2 == "White", 1, 0))
+hipp$Black = factor(ifelse(hipp$race2 == "Black", 1, 0))
+hipp$Hispanic = factor(ifelse(hipp$race2 == "Hispanic", 1, 0))
+hipp$Asian = factor(ifelse(hipp$race2 == "Asian", 1, 0))
+
+hipp$INS_basal_ng_IEQ<-scale(as.numeric(hipp$INS_basal_ng_IEQ))
+
+# Read Genetic data
+gen_dat = read.csv('/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/IIDP_for_Yasminye_71924_HK.csv')
+
+hipp$DONOR_RRID = substring(hipp$RRID,6)
+dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
+
+### genetic ancestry
+#names(dat_all)
+dat_all$AFR = factor(ifelse(dat_all$SuperPopulationClass == "AFR", 1, 0))
+dat_all$AMR = factor(ifelse(dat_all$SuperPopulationClass == "AMR", 1, 0))
+dat_all$EAS = factor(ifelse(dat_all$SuperPopulationClass == "EAS", 1, 0))
+dat_all$EUR = factor(ifelse(dat_all$SuperPopulationClass == "EUR", 1, 0))
+```
+
+
+# INS_basal_ng_IEQ: genetic ancestry
+
+```{r,  warning=FALSE}
+############################################################
+
+out1 = comput("EUR", "AFR", dat_all)
+out2 = comput("EUR", "EAS", dat_all)
+out3 = comput("EUR", "AMR", dat_all)
+out4 = comput("AFR", "EAS", dat_all)
+out5 = comput("AFR", "AMR", dat_all)
+out6 = comput("EAS", "AMR", dat_all)
+
+outnew = data.frame(rbind(out1, out2, out3, out4, out5, out6))
+colnames(outnew) = c("race1", "race2", "P_Value")
+
+outnew$Adjust_P_Value = p.adjust(as.numeric(outnew$P_Value), method="fdr")
+rownames(outnew) = NULL
+
+  # Convert P_Value and Adjust_P_Value columns to numeric
+  data <- outnew %>%
+    mutate(
+      P_Value = as.numeric(P_Value),
+      Adjust_P_Value = as.numeric(Adjust_P_Value)
+    )
+  
+  # Format p-values and adjusted p-values as scientific notation
+  data$pvalueCharacter <- as.character(formatC(data$P_Value, digits = 4, format = 'f'))
+  data$adjpvalueCharacter <- as.character(formatC(data$Adjust_P_Value, digits = 4, format = 'f'))
+  
+  # Apply bold formatting for p-values less than 0.05
+  data[data$P_Value < 0.05, 'pvalueCharacter'] <- cell_spec(data[data$P_Value < 0.05, 'pvalueCharacter'], "html", bold = TRUE)
+  data[data$Adjust_P_Value < 0.05, 'adjpvalueCharacter'] <- cell_spec(data[data$Adjust_P_Value < 0.05, 'adjpvalueCharacter'], "html", bold = TRUE)
+  
+  # Drop the original P_Value and Adjust_P_Value columns
+  data <- data[, -c(3, 4)]
+  
+  # Rename the columns
+  colnames(data) <- c("Race1", "Race2", "P-val", "Adj P-val")
+  
+  # Return the styled table
+  kbl(data, escape = FALSE, digits = 4) %>%
+    kable_styling()
+```
+
