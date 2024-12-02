@@ -58,6 +58,29 @@ summary_stats <- dat.tab %>%
 print(summary_stats)
 
 
+
+# Calculate summary statistics by gender
+summary_stats <- dat.tab %>%
+  group_by(Gender) %>%
+  summarise(
+    Age_mean = mean(Age_years, na.rm = TRUE),
+    Age_sd = sd(Age_years, na.rm = TRUE),
+    Age_range = paste0(range(Age_years, na.rm = TRUE), collapse = " - "),
+    
+    BMI_mean = mean(BMI, na.rm = TRUE),
+    BMI_sd = sd(BMI, na.rm = TRUE),
+    BMI_range = paste0(range(BMI, na.rm = TRUE), collapse = " - "),
+    
+    HbA1c_mean = mean(Donor_HbA1c, na.rm = TRUE),
+    HbA1c_sd = sd(Donor_HbA1c, na.rm = TRUE),
+    HbA1c_range = paste0(range(Donor_HbA1c, na.rm = TRUE), collapse = " - ")
+  )
+
+# View the results
+print(summary_stats)
+
+
+
 ######## For N=268 ######## 
 hipp$DONOR_RRID = substring(hipp$RRID,6)
 dat_sub = merge(gen_dat, hipp, by="DONOR_RRID") #Question: N=269 not 268
@@ -85,6 +108,27 @@ print(ancestry_gender_distribution)
 dat.tab <- dat_sub[, c("Gender", "SuperPopulationClass", "Age_years", 'BMI', "Donor_HbA1c")]
 summary_stats <- dat.tab %>%
   group_by(Gender, SuperPopulationClass) %>%
+  summarise(
+    Age_mean = mean(Age_years, na.rm = TRUE),
+    Age_sd = sd(Age_years, na.rm = TRUE),
+    Age_range = paste0(range(Age_years, na.rm = TRUE), collapse = " - "),
+    
+    BMI_mean = mean(BMI, na.rm = TRUE),
+    BMI_sd = sd(BMI, na.rm = TRUE),
+    BMI_range = paste0(range(BMI, na.rm = TRUE), collapse = " - "),
+    
+    HbA1c_mean = mean(Donor_HbA1c, na.rm = TRUE),
+    HbA1c_sd = sd(Donor_HbA1c, na.rm = TRUE),
+    HbA1c_range = paste0(range(Donor_HbA1c, na.rm = TRUE), collapse = " - ")
+  )
+
+# View the results
+print(summary_stats)
+
+
+# Calculate summary statistics by gender
+summary_stats <- dat_sub %>%
+  group_by(Gender) %>%
   summarise(
     Age_mean = mean(Age_years, na.rm = TRUE),
     Age_sd = sd(Age_years, na.rm = TRUE),
