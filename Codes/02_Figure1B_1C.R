@@ -1,5 +1,5 @@
 #### Figure 1B & 1C ####
-#### Author: Ke Xu ####
+#### Author: Ke Xu, Hakmook Kang ####
 
 # Load package 
 library(dplyr)
@@ -7,7 +7,7 @@ library(dplyr)
 
 # Load data
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
-data <- hipp
+hipp <- hipp
 
 dat.meta <- data[, c("Gender", "race2", "Age_years", 'BMI', "Donor_HbA1c")]
 
@@ -83,7 +83,7 @@ print(summary_stats)
 
 ######## For N=268 ######## 
 hipp$DONOR_RRID = substring(hipp$RRID,6)
-dat_sub = merge(gen_dat, hipp, by="DONOR_RRID") #Question: N=269 not 268 !! double check
+dat_sub = merge(gen_dat, hipp, by="DONOR_RRID")
 
 # Calculate overall gender distribution percentage
 gender_distribution <- dat_sub %>%

@@ -1,5 +1,5 @@
 #### Data Cleaning ####
-#### Author: Ke Xu ####
+#### Author: Ke Xu, Hakmook Kang ####
 
 #### Packages Loading ####
 library(tidyverse)
@@ -151,9 +151,6 @@ percent_vars = c( "INS_basal_percent",
                   "GCG_KCl_20_AUC_percent")
 # Apply transformations: convert to numeric, probit transform, and scale
 hipp[percent_vars] <- lapply(hipp[percent_vars], function(x) scale(probitlink(as.numeric(x))))
-
-
-
 
 
 

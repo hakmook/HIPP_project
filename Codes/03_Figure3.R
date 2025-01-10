@@ -1,5 +1,5 @@
 #### Figure 3 ####
-#### Author: Ke Xu ####
+#### Author: Ke Xu, Hakmook Kang ####
 
 # Load package 
 library(dplyr)
@@ -7,7 +7,7 @@ library(dplyr)
 
 # Load data
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
-data <- hipp
+hipp <- hipp
 
 
 ###################################################################
