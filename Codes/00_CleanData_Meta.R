@@ -14,26 +14,26 @@ library(sjPlot)
 library(readxl)
 
 
-#### Import Data ####
+################ Import Data ################
 hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")
 
-#### Replace spaces, parentheses, dashes, and other special characters with underscores ####
+################ Replace spaces, parentheses, dashes, and other special characters with underscores ################
 colnames(hipp) <- gsub("[^[:alnum:]]+", "_", colnames(hipp))
 colnames(hipp) <- gsub("_+", "_", colnames(hipp))
 colnames(hipp) <- gsub("^_|_$", "", colnames(hipp))
 colnames(hipp) <- gsub("content", "percent", colnames(hipp))
 
-#### Filter cohort ####
+################ Filter cohort ################
 hipp = hipp[which(hipp$n299cohort == "Y"),]
 
-#### define non-diabetes and pre-diabetes ####
+################ define non-diabetes and pre-diabetes ################
 # [ ] group
 hipp$group<-NA
 hipp$group[hipp$Donor_HbA1c<5.7]<-1
 hipp$group[hipp$Donor_HbA1c>=5.7]<-2
 hipp$group<-factor(hipp$group, levels = 1:2, labels = c("Normal","Pre-diabetes"))
 
-#### clean varaibles ####
+################ clean varaibles ################
 # [ ] race2
 # redefine race to combine American Indian with Native Hawaiian/Pacific Islander
 hipp$race2<-NA
@@ -63,7 +63,7 @@ hipp$center<-factor(hipp$center, levels = 1:5, labels = c("Scharp-Lacy","SC-ICRC
 hipp$center<-factor(hipp$center)
 hipp$Center<-factor(hipp$Center)
 
-#### Scale variables #### 
+################ Scale variables ################
 # [ ] ColdIschemiaDuration
 # [ ] PreShipmentCultureTime
 # [ ] IsletTransitTime
@@ -74,18 +74,19 @@ hipp$Center<-factor(hipp$Center)
 # [ ] Donor_HbA1c
 # [ ] Islet_Insulin_Content_ng_IEQ
 # [ ] Islet_Glucagon_Content_pg_IEQ
-hipp$ColdIschemiaDuration_s<-scale(as.numeric(hipp$Cold_Ischemia_Duration_hours))
-hipp$PreShipmentCultureTime_s<-scale(hipp$Pre_shipment_Culture_Time_hours)
-hipp$IsletTransitTime_s<-scale(hipp$Islet_Transit_Time_hours)
-hipp$IsletArea_s<-scale(as.numeric(hipp$Islet_area))
-hipp$IsletPerimeter_s<-scale(as.numeric(hipp$Islet_perimeter))
+hipp$ColdIschemiaDuration<-scale(as.numeric(hipp$Cold_Ischemia_Duration_hours))
+hipp$PreShipmentCultureTime<-scale(hipp$Pre_shipment_Culture_Time_hours)
+hipp$IsletTransitTime<-scale(hipp$Islet_Transit_Time_hours)
+hipp$IsletArea<-scale(as.numeric(hipp$Islet_area))
+hipp$IsletPerimeter<-scale(as.numeric(hipp$Islet_perimeter))
+hipp$IsletPurity= scale(as.numeric(hipp$Islet_Purity))
 hipp$Age_years_s = scale(hipp$Age_years)
 hipp$BMI_s = scale(hipp$BMI)
 hipp$Donor_HbA1c_s = scale(hipp$Donor_HbA1c)
 hipp$Islet_Insulin_Content_ng_IEQ_s = scale(hipp$Islet_Insulin_Content_ng_IEQ)
 hipp$Islet_Glucagon_Content_pg_IEQ_s = scale(hipp$Islet_Glucagon_Content_pg_IEQ)
 
-####Compute the probit transformation and scale Beta cells, alpha cells, and delta cells #### 
+############ Compute the probit transformation and scale Beta cells, alpha cells, and delta cells ################
 # [ ] Beta_Cells
 # [ ] Alpha_Cells
 # [ ] Delta_Cells
