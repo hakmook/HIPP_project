@@ -74,11 +74,15 @@ hipp$center<-factor(hipp$center)
 hipp$Center<-factor(hipp$Center)
 
 
+#####################################################################
 
 # Define the independent variables
 independent_vars_full <- "race2 + Donor_HbA1c + Age_years + Gender + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
 independent_vars_reduced <- "Donor_HbA1c + Age_years + Gender + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
 
+
+
+#####################################################################
 
 ### Insulin secretion traits
 # List of dependent variables
