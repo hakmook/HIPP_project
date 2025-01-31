@@ -98,6 +98,9 @@ hipp$Beta_cell = scale(hipp$Beta_Cells)
 hipp$Alpha_cell = scale(hipp$Alpha_Cells)
 hipp$Delta_cell = scale(hipp$Delta_Cells)
 
+hipp$Beta_cell_pct <- scale(logit(as.numeric(hipp$Beta_Cells)/100))
+hipp$Alpha_cell_pct <- scale(logit(as.numeric(hipp$Alpha_Cells)/100))
+hipp$Delta_cell_pct <- scale(logit(as.numeric(hipp$Delta_Cells)/100))
 
 ### Question ### 
 ### Do we still need the percentage or not? We have calculated the probit transformation as above
