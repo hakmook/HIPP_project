@@ -94,14 +94,14 @@ INSGCGcont.sex <- data.frame(hormone_content=INSGCG.content,
 
 for (k in 1:2) {
   # model with center
-  mod = as.formula(paste0(INSGCG.content[k],"~ BMI_s + center + Donor_HbA1c + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod = as.formula(paste0(INSGCG.content[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit <- lm(mod, data=hipp)
   temp <- summary(fit)
   temp1 <- round(temp$coefficients,4)
   temp1 <- formatC(temp1, format="e", digits=3)
   INSGCGcont.BMI$BMI_coef[k] <- temp1[2,1]
   INSGCGcont.BMI$BMI_pval[k] <- temp1[2,4]
-  A1c.idx <- which(rownames(temp1)=="Donor_HbA1c")
+  A1c.idx <- which(rownames(temp1)=="Donor_HbA1c_s")
   INSGCGcont.HbA1c$HbA1c_coef[k] <- temp1[A1c.idx,1]
   INSGCGcont.HbA1c$HbA1c_pval[k] <- temp1[A1c.idx,4]
   age.idx <- which(rownames(temp1)=="Age_years_s")
@@ -112,7 +112,7 @@ for (k in 1:2) {
   INSGCGcont.sex$sex_pval[k] <- temp1[sex.idx,4]
   
   # model without center
-  mod.noCenter <- as.formula(paste0(INSGCG.content[k],"~ BMI_s + Donor_HbA1c + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod.noCenter <- as.formula(paste0(INSGCG.content[k],"~ BMI_s + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit.noCenter <- lm(mod.noCenter, data=hipp)
   temp.center <- anova(fit.noCenter, fit)
   INSGCGcont.center$center_pval[k] <- temp.center$`Pr(>F)`[2]
