@@ -1,4 +1,4 @@
-#### Figure 7, Partitioned scores - Secretion traits, Insulin and Glucagon Secretion Traits with Partitioned GRS T1D and T2D UPDATED (scaled) ####
+#### Extended Figure 7A, Partitioned scores - Secretion traits ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 # Load package 
@@ -32,6 +32,7 @@ dat_all$PC3 = scale(dat_all$PC3)
 dat_all$PC4 = scale(dat_all$PC4)
 dat_all$PC5 = scale(dat_all$PC5)
 
+###################################################################
 # insulin secretion variables, 11 variables
 insulin_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
                   "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
@@ -44,20 +45,21 @@ glucagon_vars <- c("GCG_basal_pg_IEQ", "GCG_G_16_7_AUC_pg_IEQ", "GCG_G_16_7_II",
                    "GCG_G_1_7_Epi_1_AUC_pg_IEQ", "GCG_G_1_7_Epi_1_SI", "GCG_KCl_20_AUC_pg_IEQ", 
                    "GCG_KCl_20_SI")
 
-Part_GRS_vars = c("HLA.DR.DQ", "HLA.Class.1", "HLA.Class.2", "Non.HLA")
-
-Part_GRS_vars2 = c("BETA_CELL", "PROINSULIN", "OBESITY" , "LIPODYSTROPHY", "LIVER_LIPID" )
 
 #################################################
 ############ GRS T1D
 # insulin secretion 
+
+Part_GRS_vars = c("HLA.DR.DQ", "HLA.Class.1", "HLA.Class.2", "Non.HLA")
+
 Summary_Table = vector(mode='list', length=2)
 model_out = vector(mode='list', length=length(insulin_vars))
+
 
 for (m1 in 1:length(Part_GRS_vars)){
   temp_summary = NULL
   for (m in 1:length(insulin_vars)){
-    model = as.formula(paste0(insulin_vars[m], "~", Part_GRS_vars[m1]," + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(insulin_vars[m], "~", Part_GRS_vars[m1]," +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out[[m]][[m1]] = fit 
@@ -85,7 +87,7 @@ for (m1 in 1:length(Part_GRS_vars)){
   temp_summary = NULL
   for (m in 1:length(glucagon_vars)){
     
-    model = as.formula(paste0(glucagon_vars[m], "~", Part_GRS_vars[m1], " + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(glucagon_vars[m], "~", Part_GRS_vars[m1], " +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out_g[[m]][[m1]] = fit
@@ -108,16 +110,22 @@ for (m1 in 1:length(Part_GRS_vars)){
 
 names(Summary_Table[[2]]) = Part_GRS_vars
 
-#################################################
+
+
+######################################################
 ############ GRS T2D
 # insulin secretion 
+
+Part_GRS_vars2 = c("BETA_CELL", "PROINSULIN", "OBESITY" , "LIPODYSTROPHY", "LIVER_LIPID" )
+
 Summary_Table2 = vector(mode='list', length=2)
 model_out2 = vector(mode='list', length=length(insulin_vars))
+
 
 for (m1 in 1:length(Part_GRS_vars2)){
   temp_summary = NULL
   for (m in 1:length(insulin_vars)){
-    model = as.formula(paste0(insulin_vars[m], "~", Part_GRS_vars2[m1]," + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(insulin_vars[m], "~", Part_GRS_vars2[m1]," +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out2[[m]][[m1]] = fit 
@@ -145,7 +153,7 @@ for (m1 in 1:length(Part_GRS_vars2)){
   temp_summary = NULL
   for (m in 1:length(glucagon_vars)){
     
-    model = as.formula(paste0(glucagon_vars[m], "~", Part_GRS_vars2[m1], " + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(glucagon_vars[m], "~", Part_GRS_vars2[m1], " +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out_g2[[m]][[m1]] = fit
@@ -171,48 +179,58 @@ names(Summary_Table2[[2]]) = Part_GRS_vars2
 
 
 
+# Summary Table
 
-########Summary Tables################
 ## Partitioned GRS T1
 ### HLA DR/DQ and Insulin secretion trait 
 Summary_Tab = Summary_Table[[1]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### HLA Class 1 and Insulin secretion trait 
 Summary_Tab = Summary_Table[[1]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### HLA Class 2 and Insulin secretion trait 
 Summary_Tab = Summary_Table[[1]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### Non HLA and Insulin secretion trait 
 Summary_Tab = Summary_Table[[1]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### HLA DR/DQ and Glucagon secretion trait 
 Summary_Tab = Summary_Table[[2]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### HLA Class 1 and Glucagon secretion trait 
 Summary_Tab = Summary_Table[[2]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### HLA Class 2 and Glucagon secretion trait 
 Summary_Tab = Summary_Table[[2]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### Non HLA and Glucagon secretion trait 
 Summary_Tab = Summary_Table[[2]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
+
+
 
 
 ## Partitioned GRS T2
@@ -221,20 +239,24 @@ Summary_Tab = Summary_Table2[[1]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### Proinsulin and Insulin secretion trait 
 Summary_Tab = Summary_Table2[[1]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### Obesity and Insulin secretion trait 
 Summary_Tab = Summary_Table2[[1]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### Lipodystrophy and Insulin secretion trait 
 Summary_Tab = Summary_Table2[[1]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### Liver lipid and Insulin secretion trait 
 Summary_Tab = Summary_Table2[[1]][[5]][,-c(2,3)]
@@ -242,27 +264,35 @@ colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
 
+
 ### Beta cell and Glucagon secretion trait 
 Summary_Tab = Summary_Table2[[2]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### Proinsulin and Glucagon secretion trait 
 Summary_Tab = Summary_Table2[[2]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
 ### Obesity and Glucagon secretion trait 
 Summary_Tab = Summary_Table2[[2]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
+
+### Lipodystrophy and Glucagon secretion trait 
 Summary_Tab = Summary_Table2[[2]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
 
 ### Liver lipid and Glucagon secretion trait 
 Summary_Tab = Summary_Table2[[2]][[5]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
+
 

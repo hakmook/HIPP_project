@@ -1,4 +1,4 @@
-#### Figure 7, Complete scores - Secretion traits, Insulin and Glucagon Secretion Traits with GRS T1D and T2D (scaled) UPDATED ####
+#### Extended Figure 7A, Complete scores - Secretion traits ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 # Load package 
@@ -32,6 +32,7 @@ dat_all$PC3 = scale(dat_all$PC3)
 dat_all$PC4 = scale(dat_all$PC4)
 dat_all$PC5 = scale(dat_all$PC5)
 
+###################################################################
 # insulin secretion variables, 11 variables
 insulin_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
                   "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
@@ -40,10 +41,9 @@ insulin_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ"
 
 # glucagon secretion variables, 9 variables
 glucagon_vars <- c("GCG_basal_pg_IEQ", "GCG_G_16_7_AUC_pg_IEQ", "GCG_G_16_7_II", 
-              "GCG_G_16_7_IBMX_100_AUC_pg_IEQ", "GCG_G_16_7_IBMX_100_SI", 
-              "GCG_G_1_7_Epi_1_AUC_pg_IEQ", "GCG_G_1_7_Epi_1_SI", "GCG_KCl_20_AUC_pg_IEQ", 
-              "GCG_KCl_20_SI")
-
+                   "GCG_G_16_7_IBMX_100_AUC_pg_IEQ", "GCG_G_16_7_IBMX_100_SI", 
+                   "GCG_G_1_7_Epi_1_AUC_pg_IEQ", "GCG_G_1_7_Epi_1_SI", "GCG_KCl_20_AUC_pg_IEQ", 
+                   "GCG_KCl_20_SI")
 
 
 #################################################
@@ -54,7 +54,7 @@ model_out = vector(mode='list', length=length(insulin_vars))
 
 temp_summary = NULL
 for (m in 1:length(insulin_vars)){
-  model = as.formula(paste0(insulin_vars[m], "~ T1D.GRS + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+  model = as.formula(paste0(insulin_vars[m], "~ T1D.GRS + Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
   fit = lm(model, data = dat_all)
   model_out[[m]] = fit 
@@ -80,7 +80,7 @@ model_out_g = vector(mode='list', length=length(glucagon_vars))
 
 temp_summary = NULL
 for (m in 1:length(glucagon_vars)){
-  model = as.formula(paste0(glucagon_vars[m], "~ T1D.GRS + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+  model = as.formula(paste0(glucagon_vars[m], "~ T1D.GRS +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
   fit = lm(model, data = dat_all)
   model_out_g[[m]] = fit
@@ -110,7 +110,7 @@ model_out_al = vector(mode='list', length=length(insulin_vars))
 
 temp_summary = NULL
 for (m in 1:length(insulin_vars)){
-  model = as.formula(paste0(insulin_vars[m], "~ T2D.GRS + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+  model = as.formula(paste0(insulin_vars[m], "~ T2D.GRS +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
   fit = lm(model, data = dat_all)
   model_out_al[[m]] = fit
@@ -136,7 +136,7 @@ model_out_al_g = vector(mode='list', length=length(glucagon_vars))
 
 temp_summary = NULL
 for (m in 1:length(glucagon_vars)){
-  model = as.formula(paste0(glucagon_vars[m], "~ T2D.GRS + Donor_HbA1c_s + Gender +  Age_years_s + center + BMI_s + 
+  model = as.formula(paste0(glucagon_vars[m], "~ T2D.GRS +  Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
   fit = lm(model, data = dat_all)
   model_out_al_g[[m]] = fit
@@ -161,10 +161,10 @@ names(model_out_al_g) = glucagon_vars
 
 
 
-########################
+
 # Summary Table
 
-## GRS T1D and Insulin secretion trait
+## GRS T1D and Insulin secretion trait 
 Summary_Tab = Summary_Table[[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
@@ -186,3 +186,6 @@ Summary_Tab
 Summary_Tab = Summary_Table_al[[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
+
+
+

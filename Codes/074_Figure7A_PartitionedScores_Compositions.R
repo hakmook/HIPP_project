@@ -16,7 +16,6 @@ hipp$DONOR_RRID = substring(hipp$RRID,6)
 dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
 
 
-###################
 dat_all$HLA.DR.DQ = scale(dat_all$HLA.DR.DQ)
 dat_all$HLA.Class.1 = scale(dat_all$HLA.Class.1)
 dat_all$HLA.Class.2 = scale(dat_all$HLA.Class.2)
@@ -33,8 +32,6 @@ dat_all$PC2 = scale(dat_all$PC2)
 dat_all$PC3 = scale(dat_all$PC3)
 dat_all$PC4 = scale(dat_all$PC4)
 dat_all$PC5 = scale(dat_all$PC5)
-###################
-
 
 # insulin secretion variables, 11 variables
 cell_vars = c("ProbitBeta", "ProbitAlpha", "ProbitDelta")
