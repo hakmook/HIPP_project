@@ -9,8 +9,8 @@ Step 1: Data Cleaning
 
 Alternatively, you can skip the data cleaning step and use the pre-processed data available in the DATA folder:
 
-- DATA/data_process_meta.RData
-- DATA/data_process_gen_dat.RData
+- Data/data_process_meta.RData
+- Data/data_process_gen_dat.RData
 
 Step 2: Data Analysis
 
