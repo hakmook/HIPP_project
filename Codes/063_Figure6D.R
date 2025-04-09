@@ -71,8 +71,11 @@ hipp$IsletTransitTime<-hipp$Islet_Transit_Time_hours
 
 
 ################ merge 2 dataset ################
+# new data
 gen_dat = read.csv('/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/IIDP_for_Yasminye_71924_HK.csv')
 
+# old data
+gen_dat_old = read.csv('/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/IIDP_102523_FOR_YASMINYE.csv') 
 
 hipp$DONOR_RRID = substring(hipp$RRID,6)
 dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
