@@ -9,7 +9,7 @@ library(dplyr)
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
 hipp <- hipp
 
-dat.meta <- data[, c("Gender", "race2", "Age_years", 'BMI', "Donor_HbA1c")]
+dat.meta <- hipp[, c("Gender", "race2", "Age_years", 'BMI', "Donor_HbA1c")]
 
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_gen_dat.RData")
 gen_dat <- gen_dat
