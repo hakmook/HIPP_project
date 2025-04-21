@@ -61,6 +61,10 @@ hipp$BetaCellPct<-probitlink(hipp$Beta_Cells/100)
 hipp$AlphaCellPct<-probitlink(hipp$Alpha_Cells/100)
 hipp$DeltaCellPct<-probitlink(hipp$Delta_Cells/100)
 
+### Use scale(logit(as.numeric(hipp$Beta.Cells….)/100)) when % beta cell composition is the outcome variable.
+hipp$Beta_cell_pct <- scale(logit(as.numeric(hipp$Beta_Cells)/100))
+hipp$Alpha_cell_pct <- scale(logit(as.numeric(hipp$Alpha_Cells)/100))
+hipp$Delta_cell_pct <- scale(logit(as.numeric(hipp$Delta_Cells)/100))
 
 # [ ] PreShipmentCultureTime and IsletTransitTime
 hipp$PreShipmentCultureTime<-hipp$Pre_shipment_Culture_Time_hours

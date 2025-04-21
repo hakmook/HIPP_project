@@ -19,22 +19,18 @@ library(readxl)
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_noscale.RData")
 hipp <- hipp
 
-load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_gen_dat.RData")
-gen_dat = gen_dat
 
-hipp$DONOR_RRID = substring(hipp$RRID,6)
-hipp = merge(gen_dat, hipp, by="DONOR_RRID")
 
 #####################################################################
 
 # Define the independent variables
-independent_vars_full <- "Gender + PC1 + PC2 + PC3 + PC4 + PC5 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
-independent_vars_reduced <- "PC1 + PC2 + PC3 + PC4 + PC5 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
+independent_vars_full <- "Gender + race2 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
+independent_vars_reduced <- "race2 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
 
 
 # List of dependent variables
 dependent_vars <- c(
-  "Alpha_cell_pct", "Beta_cell_pct", "Delta_cell_pct"
+  "AlphaCellPct", "BetaCellPct", "DeltaCellPct"
 )
 
 

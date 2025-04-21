@@ -94,10 +94,12 @@ hipp$ProbitBeta<-scale(probitlink(hipp$Beta_Cells/100))
 hipp$ProbitAlpha<-scale(probitlink(hipp$Alpha_Cells/100))
 hipp$ProbitDelta<-scale(probitlink(hipp$Delta_Cells/100))
 
+### Use scale(hipp$Beta.Cells….) when % beta cell composition is an explanatory variable
 hipp$Beta_cell = scale(hipp$Beta_Cells)
 hipp$Alpha_cell = scale(hipp$Alpha_Cells)
 hipp$Delta_cell = scale(hipp$Delta_Cells)
 
+### Use scale(logit(as.numeric(hipp$Beta.Cells….)/100)) when % beta cell composition is the outcome variable.
 hipp$Beta_cell_pct <- scale(logit(as.numeric(hipp$Beta_Cells)/100))
 hipp$Alpha_cell_pct <- scale(logit(as.numeric(hipp$Alpha_Cells)/100))
 hipp$Delta_cell_pct <- scale(logit(as.numeric(hipp$Delta_Cells)/100))
