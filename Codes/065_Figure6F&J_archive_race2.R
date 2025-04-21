@@ -9,12 +9,6 @@ library(dplyr)
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
 hipp <- hipp
 
-# new data
-load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_gen_dat.RData")
-gen_dat = gen_dat
-
-hipp$DONOR_RRID = substring(hipp$RRID,6)
-hipp = merge(gen_dat, hipp, by="DONOR_RRID")
 
 
 
@@ -34,7 +28,7 @@ cellcomp.Age <- data.frame(cell_comp=cell_comp,
 
 for (k in 1:3) {
   # model with center
-  mod = as.formula(paste0(cell_comp[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod = as.formula(paste0(cell_comp[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit <- lm(mod, data=hipp)
   temp <- summary(fit)
   temp1 <- round(temp$coefficients,4)
@@ -51,7 +45,7 @@ for (k in 1:3) {
   cellcomp.HbA1c$HbA1c_pval[k] <- temp1[A1c.idx,4]
   
   # model without center
-  mod.noCenter <- as.formula(paste0(cell_comp[k],"~ BMI_s + Donor_HbA1c_s + Gender + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod.noCenter <- as.formula(paste0(cell_comp[k],"~ BMI_s + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit.noCenter <- lm(mod.noCenter, data=hipp)
   temp.center <- anova(fit.noCenter, fit)
   cellcomp.center$center_pval[k] <- temp.center$`Pr(>F)`[2]
@@ -100,7 +94,7 @@ INSGCGcont.sex <- data.frame(hormone_content=INSGCG.content,
 
 for (k in 1:2) {
   # model with center
-  mod = as.formula(paste0(INSGCG.content[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod = as.formula(paste0(INSGCG.content[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit <- lm(mod, data=hipp)
   temp <- summary(fit)
   temp1 <- round(temp$coefficients,4)
@@ -118,7 +112,7 @@ for (k in 1:2) {
   INSGCGcont.sex$sex_pval[k] <- temp1[sex.idx,4]
   
   # model without center
-  mod.noCenter <- as.formula(paste0(INSGCG.content[k],"~ BMI_s + Donor_HbA1c_s + Gender + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod.noCenter <- as.formula(paste0(INSGCG.content[k],"~ BMI_s + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit.noCenter <- lm(mod.noCenter, data=hipp)
   temp.center <- anova(fit.noCenter, fit)
   INSGCGcont.center$center_pval[k] <- temp.center$`Pr(>F)`[2]
