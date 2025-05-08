@@ -164,13 +164,3 @@ hipp[percent_vars] <- lapply(hipp[percent_vars], function(x) scale(probitlink(as
 
 save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
 
-# delete samples with traits have missing values
-vars_to_check <- c(INS_vars, GCG_vars)
-
-# Remove rows with any missing values in the specified columns
-hipp <- hipp[complete.cases(hipp[, vars_to_check]), ]
-
-## N = 298
-
-# Save data 
-save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_298.RData")
