@@ -72,3 +72,23 @@ hipp$IsletTransitTime<-hipp$Islet_Transit_Time_hours
 
 # Save data 
 save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_noscale.RData")
+
+
+# delete samples with traits have missing values
+INS_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
+              "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
+              "INS_G_16_7_IBMX_100_SI", "INS_G_1_7_Epi_1_AUC_ng_IEQ", "INS_G_1_7_Epi_1_II_updated", 
+              "INS_KCl_20_AUC_ng_IEQ", "INS_KCl_20_SI")
+
+GCG_vars <- c("GCG_basal_pg_IEQ", "GCG_G_16_7_AUC_pg_IEQ", "GCG_G_16_7_II", 
+              "GCG_G_16_7_IBMX_100_AUC_pg_IEQ", "GCG_G_16_7_IBMX_100_SI", 
+              "GCG_G_1_7_Epi_1_AUC_pg_IEQ", "GCG_G_1_7_Epi_1_SI", "GCG_KCl_20_AUC_pg_IEQ", 
+              "GCG_KCl_20_SI")
+
+vars_to_check <- c(INS_vars, GCG_vars)
+
+# Remove rows with any missing values in the specified columns
+hipp <- hipp[complete.cases(hipp[, vars_to_check]), ]
+
+# Save data 
+save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_noscale_298.RData")

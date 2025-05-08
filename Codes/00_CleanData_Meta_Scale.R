@@ -104,6 +104,11 @@ hipp$Beta_cell_pct <- scale(logit(as.numeric(hipp$Beta_Cells)/100))
 hipp$Alpha_cell_pct <- scale(logit(as.numeric(hipp$Alpha_Cells)/100))
 hipp$Delta_cell_pct <- scale(logit(as.numeric(hipp$Delta_Cells)/100))
 
+# [ ] Beta Alpha Delta Cell
+hipp$BetaCellPct<-probitlink(hipp$Beta_Cells/100)
+hipp$AlphaCellPct<-probitlink(hipp$Alpha_Cells/100)
+hipp$DeltaCellPct<-probitlink(hipp$Delta_Cells/100)
+
 ### Question ### 
 ### Do we still need the percentage or not? We have calculated the probit transformation as above
 # Calculate percentage
@@ -157,7 +162,15 @@ percent_vars = c( "INS_basal_percent",
 # Apply transformations: convert to numeric, probit transform, and scale
 hipp[percent_vars] <- lapply(hipp[percent_vars], function(x) scale(probitlink(as.numeric(x))))
 
+save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
 
+# delete samples with traits have missing values
+vars_to_check <- c(INS_vars, GCG_vars)
+
+# Remove rows with any missing values in the specified columns
+hipp <- hipp[complete.cases(hipp[, vars_to_check]), ]
+
+## N = 298
 
 # Save data 
-save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
+save(list=c("hipp"),file="/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_298.RData")
