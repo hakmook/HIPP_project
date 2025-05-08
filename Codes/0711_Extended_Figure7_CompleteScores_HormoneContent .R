@@ -1,6 +1,7 @@
 #### Extended Figure 7A, Complete scores - Hormone content  ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
 # Load package 
 library(dplyr)
 

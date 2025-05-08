@@ -1,6 +1,8 @@
 #### Figure 5, Islet composition ~ hormone content  ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

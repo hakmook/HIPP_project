@@ -1,6 +1,9 @@
 #### Extended Figure 7A, Complete scores - Composition ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
+
 # Load package 
 library(dplyr)
 

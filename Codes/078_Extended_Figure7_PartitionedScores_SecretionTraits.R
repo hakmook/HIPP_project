@@ -1,6 +1,8 @@
 #### Extended Figure 7A, Partitioned scores - Secretion traits ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

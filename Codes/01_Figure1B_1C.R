@@ -1,6 +1,8 @@
 #### Figure 1B & 1C ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

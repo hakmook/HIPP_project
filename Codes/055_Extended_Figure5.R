@@ -1,6 +1,8 @@
 #### Extended Data Figure 5####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 library(kableExtra)

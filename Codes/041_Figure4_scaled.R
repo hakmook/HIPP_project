@@ -1,18 +1,10 @@
 #### Figure 4 (scaled) ####
 #### Author: Ke Xu, Hakmook Kang####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
-library(tidyverse)
-library(Hmisc)
-library(rms)
-library(kableExtra)
-library(knitr)
-library(dplyr)
-library(xlsx)
-library(VGAM)
-library(sjPlot)
-library(readxl)
 
 # Load data
 load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")

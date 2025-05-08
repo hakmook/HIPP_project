@@ -1,6 +1,8 @@
 #### Extended Data Figure 4C&D, Pre-Diabeteic vs. Normal in Islet Insulin and Glucagon Secretory Traits (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

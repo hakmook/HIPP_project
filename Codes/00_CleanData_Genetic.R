@@ -1,6 +1,8 @@
 #### Data Cleaning ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 ## Clean Genetic data
 gen_dat = read.csv('/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/IIDP_for_Yasminye_71924_HK.csv')
 ### genetic ancestry

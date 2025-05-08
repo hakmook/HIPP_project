@@ -1,13 +1,10 @@
 #### Figure 6G&K, Cell composition vs. age, pre-shipment culture time, transit time; Hormone content vs. race, pre-shipment culture time, transit time ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
-library(car)
-
-
-
-
 
 ### V1. Scaled ###
 # Load data

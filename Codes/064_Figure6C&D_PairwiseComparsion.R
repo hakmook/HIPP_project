@@ -1,19 +1,10 @@
 #### Figure 6C&D, Cell composition vs. Race, Pairwise comparisons ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
-library(tidyverse)
-library(Hmisc)
-library(rms)
-library(kableExtra)
-library(knitr)
-library(dplyr)
-library(xlsx)
-library(VGAM)
-library(sjPlot)
-library(readxl)
-
 
 # Load data
 hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")

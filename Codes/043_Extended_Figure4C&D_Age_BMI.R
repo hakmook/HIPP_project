@@ -1,6 +1,8 @@
 #### Extended Data Figure 4C&D, Secretion traits vs age/BMI_s (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

@@ -1,6 +1,8 @@
 #### Figure 7A, Partitioned scores - Compositions, Cell Compositions with Partitioned GRS T1D and T2D UPDATED (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

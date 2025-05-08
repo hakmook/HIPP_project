@@ -1,6 +1,7 @@
 #### Figure 7A, Complete scores - Hormone content, Hormone content with GRS T1D and T2D UPDATED without HbA1c (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
 # Load package 
 library(dplyr)
 

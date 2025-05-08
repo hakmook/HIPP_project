@@ -1,6 +1,8 @@
 #### Figure 7, Complete scores - Secretion traits, Insulin and Glucagon Secretion Traits with GRS T1D and T2D (scaled) UPDATED ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

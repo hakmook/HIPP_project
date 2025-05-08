@@ -1,17 +1,12 @@
 #### Data Cleaning ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 #### Packages Loading ####
-library(tidyverse)
-library(Hmisc)
-library(rms)
-library(kableExtra)
-library(knitr)
-library(dplyr)
-library(xlsx)
-library(VGAM)
-library(sjPlot)
-library(readxl)
+library(readxl)   
+library(dplyr)    
+library(VGAM)        
 
 
 ################ Import Data ################

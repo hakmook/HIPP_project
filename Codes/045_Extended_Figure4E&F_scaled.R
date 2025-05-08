@@ -1,9 +1,10 @@
 #### Extended Data Figure 4E&F, Secretion traits vs age/BMI_s/center, vs hormone content + cell composition, vs hormone content + cell composition + hormone content * cell composition (scaled)####
 #### Author: Ke Xu, Danni Shi, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
-library(readxl)
 
 
 ################ Import Data ################

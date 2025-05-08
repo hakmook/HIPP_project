@@ -3,16 +3,6 @@
 
 # Load package 
 library(dplyr)
-library(tidyverse)
-library(Hmisc)
-library(rms)
-library(kableExtra)
-library(knitr)
-library(dplyr)
-library(xlsx)
-library(VGAM)
-library(sjPlot)
-library(readxl)
 
 ################ Import Data ################
 # Load data

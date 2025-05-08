@@ -1,18 +1,10 @@
 #### Figure 6D, Secretion traits, hormone contents, and cell compositions with predicted ancestry (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
-library(tidyverse)
-library(Hmisc)
-library(rms)
-library(kableExtra)
-library(knitr)
-library(dplyr)
-library(xlsx)
-library(VGAM)
-library(sjPlot)
-library(readxl)
 
 
 # Load data

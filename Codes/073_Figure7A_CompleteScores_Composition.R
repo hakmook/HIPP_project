@@ -1,6 +1,8 @@
 #### Figure 7A, Complete scores - Compositions, Cell compositions with GRS T1D and T2D UPDATED (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 

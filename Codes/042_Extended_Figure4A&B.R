@@ -1,6 +1,8 @@
 #### Extended Data Figure 4A&B, Insulin and Glucagon Secretion Traits with preshipment, transit time, and islet purity (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
+rm(list = ls())
+
 # Load package 
 library(dplyr)
 
