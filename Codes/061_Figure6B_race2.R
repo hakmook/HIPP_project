@@ -16,7 +16,7 @@ library(readxl)
 
 ################ Import Data ################
 # Load data
-load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta_noscale.RData")
+load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
 hipp <- hipp
 
 
@@ -24,8 +24,8 @@ hipp <- hipp
 #####################################################################
 
 # Define the independent variables
-independent_vars_full <- "Gender + race2 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
-independent_vars_reduced <- "race2 + Donor_HbA1c + Age_years + center + BMI + Pre_shipment_Culture_Time_hours + Islet_Transit_Time_hours"
+independent_vars_full <- "Gender + race2 + Donor_HbA1c_s + Age_years_s + center + BMI_s + PreShipmentCultureTime + IsletTransitTime"
+independent_vars_reduced <- "race2 + Donor_HbA1c_s + Age_years_s + center + BMI_s + PreShipmentCultureTime + IsletTransitTime"
 
 
 # List of dependent variables
