@@ -7,59 +7,15 @@ rm(list = ls())
 library(dplyr)
 
 # Load data
-hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")
+#hipp<-read_excel("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA0/20240411_HIPP_data_freeze_202211071_new_morphology_data_updated.xlsx", sheet="Master_table")
+load("/Users/kexu/Library/CloudStorage/OneDrive-VUMC/Research/Active/20241022_HIPP/DATA1/data_process_meta.RData")
+hipp <- hipp
 
-
-
-################ Clean data ################
-
-################ Replace spaces, parentheses, dashes, and other special characters with underscores ################
-colnames(hipp) <- gsub("[^[:alnum:]]+", "_", colnames(hipp))
-colnames(hipp) <- gsub("_+", "_", colnames(hipp))
-colnames(hipp) <- gsub("^_|_$", "", colnames(hipp))
-colnames(hipp) <- gsub("content", "percent", colnames(hipp))
-
-################ Filter cohort ################
-hipp = hipp[which(hipp$n299cohort == "Y"),]
-
-################ clean varaibles ################
-# [ ] race2
-# redefine race to combine American Indian with Native Hawaiian/Pacific Islander
-hipp$race2<-NA
-hipp$race2[hipp$Race=="White"]<-1
-hipp$race2[hipp$Race=="Black or African American"]<-2
-hipp$race2[hipp$Race=="Hispanic/Latino"]<-3
-hipp$race2[hipp$Race=="Asian"]<-4
-# hipp$race2[hipp$Race=="American Indian or Alaska Native" | 
-#              hipp$Race=="Native Hawaiian or Other Pacific Islander"]<-5
-# hipp$race2[hipp$Race=="Not Available"]<-6
-hipp$race2<-factor(hipp$race2, levels = 1:4, 
-                   labels = c("White","Black","Hispanic","Asian"))
-label(hipp$race2) = "Race"
-
-hipp<-subset(hipp, subset = !is.na(race2))  # dim(hipp)[1]  321
-hipp$Race<-factor(hipp$Race)
-hipp$race2<-factor(hipp$race2)
 
 hipp$White = factor(ifelse(hipp$race2 == "White", 1, 0))
 hipp$Black = factor(ifelse(hipp$race2 == "Black", 1, 0))
 hipp$Hispanic = factor(ifelse(hipp$race2 == "Hispanic", 1, 0))
 hipp$Asian = factor(ifelse(hipp$race2 == "Asian", 1, 0))
-
-# [ ] center
-hipp$center<-NA
-hipp$center[hipp$Center=="Scharp-Lacy"]<-1
-hipp$center[hipp$Center=="SC-ICRC"]<-2
-hipp$center[hipp$Center=="Miami"]<-3
-hipp$center[hipp$Center=="Wisconsin"]<-4
-hipp$center[hipp$Center=="Pennsylvania"]<-5
-hipp$center<-factor(hipp$center, levels = 1:5, labels = c("Scharp-Lacy","SC-ICRC","Miami","Wisconsin","Pennsylvania"))
-hipp$center<-factor(hipp$center)
-hipp$Center<-factor(hipp$Center)
-
-# [ ] PreShipmentCultureTime and IsletTransitTime
-hipp$PreShipmentCultureTime<-hipp$Pre_shipment_Culture_Time_hours
-hipp$IsletTransitTime<-hipp$Islet_Transit_Time_hours
 
 
 ################ merge 2 dataset ################
