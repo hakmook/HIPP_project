@@ -29,23 +29,23 @@ Some figures are generated from the same code, so duplicated results are not lis
 The duplicated figures and their corresponding codes are:
 
 - **Figure 6D** is the same as:
-  - Extended Data Figure 4E & F
-  - Extended Data Figure 5
-  - Extended Data Figure 7 B
-  - Extended Data Figure 7 D
+  - Extended Data Figure 4E & F (Genetic ancestry)
+  - Extended Data Figure 5 (Global comparison: INS / GLU traits ~ Genetic ancestry)
+  - Extended Data Figure 7 B (Global comparison: Cell composition ~ Genetic ancestry)
+  - Extended Data Figure 7 D (Global comparison: Hormone content ~ Genetic ancestry)
 
 - **Figure 6B** is the same as:
-  - Extended Data Figure 7 B
+  - Extended Data Figure 7 B (Cell composition ~ Sex)
 
 - **Figure 6C** is the same as:
-  - Extended Data Figure 7 B
+  - Extended Data Figure 7 B (Cell composition ~ Reported race)
 
 - **Figure 6F & J** is the same as:
-  - Extended Data Figure 7 B
-  - Extended Data Figure 7 D
+  - Extended Data Figure 7 B (Cell composition ~ Center)
+  - Extended Data Figure 7 D (Hormone content ~ Sex)
 
 - **Figure 6G & K** is the same as:
-  - Extended Data Figure 7 D
+  - Extended Data Figure 7 D (Hormone content ~ Reported race)
 
 
 
