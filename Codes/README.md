@@ -14,7 +14,7 @@ Alternatively, you can skip the data cleaning step and use the pre-processed dat
 
 Step 2: Data Analysis
 
-- Run 01_Figure1B_1C.R to generate the first figure.
+- Run 01_Figure1B&C.R to generate the first figure.
 - Continue executing scripts in numerical order to maintain the correct sequence.
 
 
@@ -22,7 +22,7 @@ Notes: Same report shared for figures
 
 
 
-## Summary of Figures That Are Generated from the Same Code
+## Summary of Figures Generated from the Same Code
 
 Some figures are generated from the same code, so duplicated results are not listed separately. 
 
