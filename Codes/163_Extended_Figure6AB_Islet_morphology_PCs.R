@@ -1,4 +1,4 @@
-#### Figure 5, Insulin and Glucagon Secretion Traits with Islet Morphology (scaled) ####
+#### Extended Data Figure 6, Insulin and Glucagon Secretion Traits with Islet Morphology (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())

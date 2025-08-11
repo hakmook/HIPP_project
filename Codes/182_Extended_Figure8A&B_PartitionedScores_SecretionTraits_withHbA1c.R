@@ -1,4 +1,4 @@
-#### Figure 7, Partitioned scores - Secretion traits, Insulin and Glucagon Secretion Traits with Partitioned GRS T1D and T2D UPDATED (scaled) ####
+#### Extended Data Figure 8, Partitioned scores - Secretion traits, Insulin and Glucagon Secretion Traits with Partitioned GRS T1D and T2D UPDATED (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())

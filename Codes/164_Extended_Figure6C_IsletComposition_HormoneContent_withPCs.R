@@ -1,4 +1,4 @@
-#### Figure 5, Islet composition ~ hormone content  ####
+#### Extended Data Figure 6, Islet composition ~ hormone content  ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())

@@ -1,4 +1,4 @@
-#### Extended Data Figure 6 A&C####
+#### Extended Data Figure 7 A&C####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())
@@ -86,19 +86,19 @@ cellcomp.transit
 
 ##### hormone content ~ BMI_s + other covariates #####
 # Hormone content ~ race+preshipment culture time+transit time + other covariates
-INSGCGcont.preship <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.preship <- data.frame(hormone_content=content_vars,
                                  preship_coef=rep(NA,2), 
                                  preship_pval=rep(NA,2), preship_adjpval=rep(NA,2))
-INSGCGcont.transit <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.transit <- data.frame(hormone_content=content_vars,
                                  transit_coef=rep(NA,2), transit_pval=rep(NA,2),
                                  transit_adjpval=rep(NA,2))
 
 
 for (k in 1:2) {
   # model with center
-  mod1 = as.formula(paste0(INSGCG.content[k],"~ PreShipmentCultureTime +  race2 + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
+  mod1 = as.formula(paste0(content_vars[k],"~ PreShipmentCultureTime +  race2 + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
   
-  mod2 = as.formula(paste0(INSGCG.content[k],"~ IsletTransitTime  +  race2 + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
+  mod2 = as.formula(paste0(content_vars[k],"~ IsletTransitTime  +  race2 + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
   
   
   fit1 <- lm(mod1, data=hipp)
@@ -184,7 +184,6 @@ cellcomp.center$center_adjpval <- formatC(p.adjust(cellcomp.center$center_pval,m
 cellcomp.Age$Age_adjpval <- formatC(p.adjust(cellcomp.Age$Age_pval,method='fdr'),
                                     format="e",digits=3)
 
-## Results & Summary
 ### Cell composition ~ BMI_s
 colnames(cellcomp.BMI_s) <- c("Cell composition","Coefficient","P-value","Adjusted P-value")
 cellcomp.BMI_s
@@ -204,21 +203,21 @@ cellcomp.Age
 
 # Hormone content ~ BMI_s/center/hemoglobinA1C + other covariates
 ##### hormone content ~ BMI_s + other covariates #####
-INSGCGcont.BMI_s <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.BMI_s <- data.frame(hormone_content=content_vars,
                              BMI_s_coef=rep(NA,2), BMI_s_pval=rep(NA,2), BMI_s_adjpval=rep(NA,2))
-INSGCGcont.HbA1c <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.HbA1c <- data.frame(hormone_content=content_vars,
                                HbA1c_coef=rep(NA,2), 
                                HbA1c_pval=rep(NA,2), HbA1c_adjpval=rep(NA,2))
-INSGCGcont.center <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.center <- data.frame(hormone_content=content_vars,
                                 center_pval=rep(NA,2),center_adjpval=rep(NA,2))
-INSGCGcont.age <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.age <- data.frame(hormone_content=content_vars,
                              age_coef=rep(NA,2), age_pval=rep(NA,2), age_adjpval=rep(NA,2))
-INSGCGcont.sex <- data.frame(hormone_content=INSGCG.content,
+INSGCGcont.sex <- data.frame(hormone_content=content_vars,
                              sex_coef=rep(NA,2), sex_pval=rep(NA,2), sex_adjpval=rep(NA,2))
 
 for (k in 1:2) {
   # model with center
-  mod = as.formula(paste0(INSGCG.content[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod = as.formula(paste0(content_vars[k],"~ BMI_s + center + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit <- lm(mod, data=hipp)
   temp <- summary(fit)
   temp1 <- round(temp$coefficients,4)
@@ -236,7 +235,7 @@ for (k in 1:2) {
   INSGCGcont.sex$sex_pval[k] <- temp1[sex.idx,4]
   
   # model without center
-  mod.noCenter <- as.formula(paste0(INSGCG.content[k],"~ BMI_s + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
+  mod.noCenter <- as.formula(paste0(content_vars[k],"~ BMI_s + Donor_HbA1c_s + Gender + race2 + Age_years_s + PreShipmentCultureTime + IsletTransitTime"))
   fit.noCenter <- lm(mod.noCenter, data=hipp)
   temp.center <- anova(fit.noCenter, fit)
   INSGCGcont.center$center_pval[k] <- temp.center$`Pr(>F)`[2]

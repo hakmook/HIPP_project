@@ -1,4 +1,4 @@
-#### Figure 6B scaled####
+#### Extended Data Figure 7####
 #### Author: Ke Xu, Hakmook Kang####
 
 rm(list = ls())

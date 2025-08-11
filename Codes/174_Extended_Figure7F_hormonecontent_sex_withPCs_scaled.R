@@ -1,4 +1,4 @@
-#### Figure 6F&J, Cell composition/hormone content vs. BMI, center and hemoglobin A1C (scaled) ####
+#### Extended Data Figure 7, Cell composition/hormone content vs. BMI, center and hemoglobin A1C (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())

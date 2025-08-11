@@ -1,7 +1,8 @@
-#### Figure 5, Insulin and Glucagon Secretion Traits with Islet Hormone Content (scaled) ####
+#### Extended Data Figure 6, Insulin and Glucagon Secretion Traits with cell composition (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())
+
 
 # Load package 
 library(dplyr)
@@ -19,7 +20,7 @@ dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
 
 ###################################################################
 # 3 main explanatory variables
-vars_int <- c("Islet_Insulin_Content_ng_IEQ_s", "Islet_Glucagon_Content_pg_IEQ_s")
+vars_int <- c("Beta_cell", "Alpha_cell", "Delta_cell")
 
 INS_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
               "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
@@ -41,14 +42,14 @@ outcome_int_glu = GCG_vars
 hipp <- dat_all[, c(vars_int, INS_vars, GCG_vars, co_vars)]
 
 ############################################
-### Insulin secretion and Islet_Insulin_Content_ng_IEQ_s
+### Insulin secretion and Beta_cell
 ########################################
 Summary_Table = vector(mode='list', length=2)
 
 insulin_tb = NULL
 for (m in 1:length(outcome_int_ins)){
   model = as.formula(paste0(outcome_int_ins[m], "~", 
-                            "Islet_Insulin_Content_ng_IEQ_s", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+                            "Beta_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime"))
   fit = lm(model, data = hipp)
   temp = summary(fit)
@@ -60,21 +61,21 @@ for (m in 1:length(outcome_int_ins)){
 
 insulin_tb = as.data.frame(insulin_tb)
 insulin_tb$adj_pvalue = formatC(p.adjust(insulin_tb[,4], method='fdr'),
-                                format = "e", digits = 3)
+                                    format = "e", digits = 3)
 Summary_Table = insulin_tb
 rownames(Summary_Table) = outcome_int_ins
 
 Summary_Table
 
 ############################################
-### Glucagon secretion and Islet_Insulin_Content_ng_IEQ_s
+### Glucagon secretion and Beta_cell
 ########################################
 Summary_Table = vector(mode='list', length=2)
 
 insulin_tb = NULL
 for (m in 1:length(outcome_int_glu)){
   model = as.formula(paste0(outcome_int_glu[m], "~", 
-                            "Islet_Insulin_Content_ng_IEQ_s", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+                            "Beta_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime"))
   fit = lm(model, data = hipp)
   temp = summary(fit)
@@ -93,14 +94,14 @@ rownames(Summary_Table) = outcome_int_glu
 Summary_Table
 
 ############################################
-### Insulin secretion and Islet_Glucagon_Content_pg_IEQ_s
+### Insulin secretion and Alpha_cell
 ########################################
 Summary_Table = vector(mode='list', length=2)
 
 insulin_tb = NULL
 for (m in 1:length(outcome_int_ins)){
   model = as.formula(paste0(outcome_int_ins[m], "~", 
-                            "Islet_Glucagon_Content_pg_IEQ_s", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+                            "Alpha_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime"))
   fit = lm(model, data = hipp)
   temp = summary(fit)
@@ -119,14 +120,66 @@ rownames(Summary_Table) = outcome_int_ins
 Summary_Table
 
 ############################################
-### Glucagon secretion and Islet_Glucagon_Content_pg_IEQ_s
+### Glucagon secretion and Alpha_cell
 ########################################
 Summary_Table = vector(mode='list', length=2)
 
 insulin_tb = NULL
 for (m in 1:length(outcome_int_glu)){
   model = as.formula(paste0(outcome_int_glu[m], "~", 
-                            "Islet_Glucagon_Content_pg_IEQ_s", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+                            "Alpha_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  fit = lm(model, data = hipp)
+  temp = summary(fit)
+  temp1 = temp$coefficients[2,]
+  temp1[1:3] = round(temp1[1:3], 4)
+  temp1[4] = formatC(temp1[4], format = "e", digits = 3)
+  insulin_tb = rbind(insulin_tb, temp1) 
+}
+
+insulin_tb = as.data.frame(insulin_tb)
+insulin_tb$adj_pvalue = formatC(p.adjust(insulin_tb[,4], method='fdr'),
+                                format = "e", digits = 3)
+Summary_Table = insulin_tb
+rownames(Summary_Table) = outcome_int_glu
+
+Summary_Table
+
+############################################
+### Insulin secretion and Delta_cell
+########################################
+Summary_Table = vector(mode='list', length=2)
+
+insulin_tb = NULL
+for (m in 1:length(outcome_int_ins)){
+  model = as.formula(paste0(outcome_int_ins[m], "~", 
+                            "Delta_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
+               PreShipmentCultureTime + IsletTransitTime"))
+  fit = lm(model, data = hipp)
+  temp = summary(fit)
+  temp1 = temp$coefficients[2,]
+  temp1[1:3] = round(temp1[1:3], 4)
+  temp1[4] = formatC(temp1[4], format = "e", digits = 3)
+  insulin_tb = rbind(insulin_tb, temp1) 
+}
+
+insulin_tb = as.data.frame(insulin_tb)
+insulin_tb$adj_pvalue = formatC(p.adjust(insulin_tb[,4], method='fdr'),
+                                format = "e", digits = 3)
+Summary_Table = insulin_tb
+rownames(Summary_Table) = outcome_int_ins
+
+Summary_Table
+
+############################################
+### Glucagon secretion and Delta_cell
+########################################
+Summary_Table = vector(mode='list', length=2)
+
+insulin_tb = NULL
+for (m in 1:length(outcome_int_glu)){
+  model = as.formula(paste0(outcome_int_glu[m], "~", 
+                            "Delta_cell", " + Gender + Donor_HbA1c_s + PC1 + PC2 + PC3 + PC4 + PC5 + Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime"))
   fit = lm(model, data = hipp)
   temp = summary(fit)

@@ -1,4 +1,4 @@
-#### Extended Figure 7A, Partitioned scores - Hormone content ####
+#### Extended Data Figure 8, Partitioned scores - Hormone Contents, Hormone Contents with Partitioned GRS T1D and T2D UPDATED (scaled) ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())
@@ -17,6 +17,7 @@ gen_dat <- gen_dat
 hipp$DONOR_RRID = substring(hipp$RRID,6)
 dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
 
+
 dat_all$HLA.DR.DQ = scale(dat_all$HLA.DR.DQ)
 dat_all$HLA.Class.1 = scale(dat_all$HLA.Class.1)
 dat_all$HLA.Class.2 = scale(dat_all$HLA.Class.2)
@@ -34,13 +35,16 @@ dat_all$PC3 = scale(dat_all$PC3)
 dat_all$PC4 = scale(dat_all$PC4)
 dat_all$PC5 = scale(dat_all$PC5)
 
-###################################################################
 
+# insulin secretion variables, 11 variables
 content_vars = c("Islet_Insulin_Content_ng_IEQ_s", "Islet_Glucagon_Content_pg_IEQ_s")
 
 Part_GRS_vars = c("HLA.DR.DQ", "HLA.Class.1", "HLA.Class.2", "Non.HLA")
 
+Part_GRS_vars2 = c("BETA_CELL", "PROINSULIN", "OBESITY" , "LIPODYSTROPHY", "LIVER_LIPID" )
+
 #################################################
+# Partitioned GRS T1D
 Summary_Table = vector(mode='list', length=2)
 model_out = vector(mode='list', length=length(content_vars))
 
@@ -48,7 +52,7 @@ model_out = vector(mode='list', length=length(content_vars))
 for (m1 in 1:length(Part_GRS_vars)){
   temp_summary = NULL
   for (m in 1:length(content_vars)){
-    model = as.formula(paste0(content_vars[m], "~", Part_GRS_vars[m1]," +  Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(content_vars[m], "~", Part_GRS_vars[m1]," + Donor_HbA1c_s  + Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out[[m]][[m1]] = fit 
@@ -78,7 +82,7 @@ model_out2 = vector(mode='list', length=length(content_vars))
 for (m1 in 1:length(Part_GRS_vars2)){
   temp_summary = NULL
   for (m in 1:length(content_vars)){
-    model = as.formula(paste0(content_vars[m], "~", Part_GRS_vars2[m1]," +  Gender +  Age_years_s + center + BMI_s + 
+    model = as.formula(paste0(content_vars[m], "~", Part_GRS_vars2[m1]," + Donor_HbA1c_s  + Gender +  Age_years_s + center + BMI_s + 
                PreShipmentCultureTime + IsletTransitTime + PC1 + PC2 + PC3 + PC4 + PC5"))
     fit = lm(model, data = dat_all)
     model_out2[[m]][[m1]] = fit 
@@ -100,65 +104,55 @@ names(Summary_Table[[2]]) = Part_GRS_vars2
 
 
 
-# Summary Table
 
+
+########Summary Tables################
 ## Partitioned GRS T1
-### HLA DR/DQ and Horomone contents
+### HLA DR/DQ and Cell composition
 Summary_Tab = Summary_Table[[1]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### HLA Class 1 and Horomone contents
+### HLA Class 1 and Cell composition
 Summary_Tab = Summary_Table[[1]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### HLA Class 2 and Horomone contents
+### HLA Class 2 and Cell composition
 Summary_Tab = Summary_Table[[1]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### Non HLA and Horomone contents
+### Non HLA and Cell composition
 Summary_Tab = Summary_Table[[1]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
 ## Partitioned GRS T2
-
-### Beta cell and Horomone contents
+### Beta cell and Cell composition
 Summary_Tab = Summary_Table[[2]][[1]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### Proinsulin and Horomone contents
+### Proinsulin and Cell composition
 Summary_Tab = Summary_Table[[2]][[2]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### Obesity and Horomone contents
+### Obesity and Cell composition
 Summary_Tab = Summary_Table[[2]][[3]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### Lipodystrophy and Horomone contents
+### Lipodystrophy and Cell composition 
 Summary_Tab = Summary_Table[[2]][[4]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
 
-
-### Liver lipid and Horomone contents
+### Liver lipid and Cell composition
 Summary_Tab = Summary_Table[[2]][[5]][,-c(2,3)]
 colnames(Summary_Tab) = c("Coeff", "P-val", "Adj P-val")
 Summary_Tab
-
-
 
 
 

@@ -1,4 +1,4 @@
-#### Extended Figure 7A, Partitioned scores - Secretion traits ####
+#### Extended Data Figure 8, Partitioned scores - Secretion traits ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())

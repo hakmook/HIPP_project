@@ -22,6 +22,8 @@ gen_dat = gen_dat
 hipp$DONOR_RRID = substring(hipp$RRID,6)
 dat_all = merge(gen_dat, hipp, by="DONOR_RRID")
 
+dat_all$SuperPopulationClass <- relevel(factor(dat_all$SuperPopulationClass), ref = "EUR")
+
 #####################################################################
 INS_vars <- c("INS_basal_ng_IEQ", "INS_1st_AUC_ng_IEQ", "INS_2nd_AUC_ng_IEQ", 
               "INS_G_16_7_AUC_ng_IEQ", "INS_G_16_7_SI", "INS_G_16_7_IBMX_100_AUC_ng_IEQ", 
@@ -141,3 +143,30 @@ names(Summary_Table[[1]])[1] <- "p-value"
 rownames(Summary_Table[[1]]) <- content_vars
 Summary_Table
 
+
+summary(model_out[["Islet_Insulin_Content_ng_IEQ"]])
+
+
+summary(model_out[["Islet_Glucagon_Content_pg_IEQ"]])
+
+
+############################# Hormone contents for EAS #############################
+results_esa <- data.frame()
+
+# Loop over outcomes
+for (outcome in content_vars) {
+  formula <- as.formula(paste0(outcome, " ~ SuperPopulationClass + Donor_HbA1c_s + Age_years_s + Gender + center + BMI_s + PreShipmentCultureTime + IsletTransitTime"))
+  model <- lm(formula, data = dat_all)
+  coefs <- summary(model)$coefficients
+  eas_row <- coefs[grep("SuperPopulationClassEAS", rownames(coefs)), ]
+  results_esa <- rbind(results_esa, data.frame(
+    Hormone_Content = outcome,
+    Estimate = eas_row[1],
+    P_value = eas_row[4]
+  ))
+}
+
+# Adjust p-values
+results_esa$Adj_P_value <- p.adjust(results_esa$P_value, method = "BH")
+
+results_esa
