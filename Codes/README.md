@@ -22,7 +22,7 @@ Notes: Same report shared for figures
 
 
 
-## Summary of Figures That Are the Same
+## Summary of Figures That Are Generated from the Same Code
 
 Some figures are generated from the same code, so duplicated results are not listed separately. 
 
