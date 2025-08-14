@@ -33,7 +33,7 @@ Notes: Same report shared for figures
 
 Some figures are generated from the same code, so duplicated results are not listed separately. 
 
-The duplicated figures and their corresponding codes are:
+Their corresponding codes are:
 
 - **Figure 6D** is the same as:
   - Extended Data Figure 4E & F (Genetic ancestry)
@@ -54,5 +54,6 @@ The duplicated figures and their corresponding codes are:
 - **Figure 6G & K** is the same as:
   - Extended Data Figure 7 D (Hormone content ~ Reported race)
 
-
+- **Figure 7 B** is the same as:
+  - Extended Data Figure 9 A (Delta cell composition ~ T2D)
 
