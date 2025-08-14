@@ -1,4 +1,11 @@
 ## Running the Scripts in Order
+Requried software: R version 4.5.0 
+Packages required: Each R code file contains a list of R packages needed at the beginning
+R version the R code has been tested on: R version 4.5.0
+Installation guide: R software and packages can be downloaded from https://cran.r-project.org/. Then please follow the instruction given at https://cran.r-project.org/ to have R installed on your local machine. Installation of R will not take more than 10 minutes.
+Any required non-standard hardware: None
+Expected run time for each R script: less than 10 minutes  but it heavily depends on the CPU specifications
+Instruction to run the R script: Copy and paste the script on R console
 
 Each script’s filename begins with a number indicating its execution order. Follow this sequence to ensure proper workflow:
 
