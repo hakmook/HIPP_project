@@ -1,4 +1,4 @@
-#### Extended Figure 7A, Partitioned scores - Composition ####
+#### Figure 7A, Partitioned scores - Composition ####
 #### Author: Ke Xu, Hakmook Kang ####
 
 rm(list = ls())
