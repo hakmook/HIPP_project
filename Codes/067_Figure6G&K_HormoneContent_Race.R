@@ -28,11 +28,11 @@ for (k in 1:2) {
   # k = 1
   # Model for Hormone content ~ Race
   # Full model
-  mod1 = as.formula(paste0(INSGCG.content[k], "~ race2  + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
+  mod1 = as.formula(paste0(INSGCG.content[k], "~ race2  + center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s + PreShipmentCultureTime + IsletTransitTime"))
   fit1 <- lm(mod1, data=hipp)
   
   # Reduced model (without race2)
-  mod0 = as.formula(paste0(INSGCG.content[k], "~ center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s"))
+  mod0 = as.formula(paste0(INSGCG.content[k], "~ center + Donor_HbA1c_s + Gender + Age_years_s + BMI_s + PreShipmentCultureTime + IsletTransitTime"))
   fit0 <- lm(mod0, data=hipp)
   
   f_test <- anova(fit0, fit1)
